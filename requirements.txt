@@ -1,0 +1,7 @@
+evaluate
+transformers
+datasets
+torch
+torchvision
+torchaudio
+lm-eval
