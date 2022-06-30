@@ -5,3 +5,11 @@ torch
 torchvision
 torchaudio
 lm-eval
+sentencepiece
+protobuf
+deepsparse
+onnx
+onnxruntime
+optimum
+accelerate
+nni

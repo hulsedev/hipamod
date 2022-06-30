@@ -1,0 +1,15 @@
+,model,device,task,sequence_length,latency,api
+0,distilbert-base-uncased-finetuned-sst-2-english,cpu,sequence-classification,8,0.3591214895248413,Hugging Face Infinity
+1,distilbert-base-uncased-finetuned-sst-2-english,cpu,sequence-classification,16,0.354249906539917,Hugging Face Infinity
+2,distilbert-base-uncased-finetuned-sst-2-english,cpu,sequence-classification,32,0.3519372701644897,Hugging Face Infinity
+3,distilbert-base-uncased-finetuned-sst-2-english,cpu,sequence-classification,64,0.3481025457382202,Hugging Face Infinity
+4,distilbert-base-uncased-finetuned-sst-2-english,cpu,sequence-classification,128,0.35086381435394287,Hugging Face Infinity
+5,distilbert-base-uncased-finetuned-sst-2-english,cpu,sequence-classification,256,0.36502933502197266,Hugging Face Infinity
+6,distilbert-base-uncased-finetuned-sst-2-english,cpu,sequence-classification,512,0.8382327556610107,Hugging Face Infinity
+7,bert-base-multilingual-uncased-sentiment,cpu,sequence-classification,8,0.3805927991867065,Hugging Face Infinity
+8,bert-base-multilingual-uncased-sentiment,cpu,sequence-classification,16,0.4133789539337158,Hugging Face Infinity
+9,bert-base-multilingual-uncased-sentiment,cpu,sequence-classification,32,0.45831568241119386,Hugging Face Infinity
+10,bert-base-multilingual-uncased-sentiment,cpu,sequence-classification,64,0.47954132556915285,Hugging Face Infinity
+11,bert-base-multilingual-uncased-sentiment,cpu,sequence-classification,128,0.6190609216690064,Hugging Face Infinity
+12,bert-base-multilingual-uncased-sentiment,cpu,sequence-classification,256,0.38410186767578125,Hugging Face Infinity
+13,bert-base-multilingual-uncased-sentiment,cpu,sequence-classification,512,0.3645799160003662,Hugging Face Infinity

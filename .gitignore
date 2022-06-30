@@ -158,6 +158,8 @@ target/
 #   https://pdm.fming.dev/#use-with-ide
 .pdm.toml
 
+sparse/
+model/
 data/
 lm_cache/
 

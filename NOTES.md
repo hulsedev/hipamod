@@ -17,3 +17,5 @@ We start our analysis by focusing on the three parameters: cpu, node, and task c
 - Distributed training on CPU clusters, [paper from Rice U](https://arxiv.org/pdf/2201.12667v1.pdf).
 - Training notes for the BigScience LLM, [on github](https://github.com/bigscience-workshop/bigscience/tree/master/train/tr11-176B-ml).
 - Pruning pre-trained models, using sparsity, [on arxiv](https://arxiv.org/pdf/2111.05754.pdf).
+- Tutorial on [pruning with pytorch](https://pytorch.org/tutorials/intermediate/pruning_tutorial.html).
+- Parallelism by [Hugging Face](https://huggingface.co/docs/transformers/v4.16.2/en/parallelism).
