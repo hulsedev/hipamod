@@ -13,3 +13,5 @@ onnxruntime
 optimum
 accelerate
 nni
+boto3
+sagemaker

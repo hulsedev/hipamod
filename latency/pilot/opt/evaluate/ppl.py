@@ -35,11 +35,11 @@ def log_probs_with_ppl(model_ckpt, prompt, model_dir=None, model_filename=None):
         )
 
         # TODO: add the loss to the outputs of the ONNX model
-        print("argmax tokens:", sent)
-        xentropy_loss = outputs[0]
-        print("cross entropy loss:", xentropy_loss.item())
-        ppl = torch.exp(xentropy_loss).item()
-        print("ppl:", ppl)
+        # print("argmax tokens:", sent)
+        # xentropy_loss = outputs[0]
+        # print("cross entropy loss:", xentropy_loss.item())
+        # ppl = torch.exp(xentropy_loss).item()
+        # print("ppl:", ppl)
     else:
         model = AutoModelForCausalLM.from_pretrained(model_ckpt)
         model.eval()
