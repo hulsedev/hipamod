@@ -6,6 +6,7 @@ Baseline latency for model is 60.80ms. We optimize as follows:
 - ONNX model yields 16ms
 - Optimized ONNX model yields 14ms
 - Quantized optimized ONNX model yields 9ms
+> Using the following prompt: "Paris est la capitale de la [MASK]."
 
 ## Next steps
 

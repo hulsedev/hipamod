@@ -10,4 +10,6 @@ This project seeks to determine two things:
 
 >Basically, I'm aware that it's impossible that using CPUs from PCs can compete with TPU/GPU clusters, however, if we're able to achieve even 3% of efficiency compared to the more expensive setups, that still might be very helpful.
 
+Compress 100x bigger models, to make them 100x smaller, and run them 100x faster.
+
 **In short, running opt-175B only on distributed CPUs is the mission.**

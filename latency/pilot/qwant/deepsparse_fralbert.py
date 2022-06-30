@@ -15,13 +15,11 @@ def main():
         task="text-classification",
         model_path=model_path,
     )
-    # engine = compile_model(str(model_path), 1)
 
     compute_latency = 0
     for _ in range(utils.random_folds):
         start = time.time()
-        output = classifier(benchmark_fralbert.text)
-        # _ = engine.run(benchmark_fralbert.text)
+        _ = classifier(benchmark_fralbert.text)
         compute_latency += time.time() - start
 
     print(f"Compute latency: {compute_latency / utils.random_folds * 1000:.2f}ms")

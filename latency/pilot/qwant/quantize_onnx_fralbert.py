@@ -20,19 +20,14 @@ def main(base_model_type):
         print("Quantizing non-optimized model")
         onnx_path = Path("latency/pilot/qwant/model/fralbert_base.onnx")
     output_file = Path("fralbert_base_quantized.onnx")
-    tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
     quantizer = ORTQuantizer.from_pretrained(model_ckpt, feature="masked-lm")
-    qconfig = AutoQuantizationConfig.avx512(is_static=False, per_channel=True)
+    qconfig = AutoQuantizationConfig.avx512(is_static=False, per_channel=False)
     quantizer.export(
         onnx_model_path=onnx_path,
         onnx_quantized_model_output_path=output_dir.joinpath(output_file),
         quantization_config=qconfig,
     )
     quantizer.model.config.save_pretrained(output_dir)
-
-    model = ORTModelForMaskedLM.from_pretrained(output_dir, file_name=output_file)
-    onnx_clx = pipeline("fill-mask", model=model, tokenizer=tokenizer)
-    pred = onnx_clx(benchmark_fralbert.text)
     print("Done quantizing model.")
 
 

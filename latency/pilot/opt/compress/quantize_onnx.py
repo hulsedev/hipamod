@@ -3,16 +3,12 @@ from typing import Union, Optional
 from pathlib import Path
 
 from optimum.onnxruntime.configuration import AutoQuantizationConfig
-from optimum.onnxruntime import ORTQuantizer, ORTModel
+from optimum.onnxruntime import ORTQuantizer
 from transformers import (
     AutoTokenizer,
-    pipeline,
     PreTrainedModel,
-    GPT2Tokenizer,
-    GPT2Model,
     AutoFeatureExtractor,
 )
-from optimum.onnxruntime.modeling_ort import ORTModelForSequenceClassification
 from transformers.onnx.features import FeaturesManager
 from transformers.onnx.utils import get_preprocessor
 

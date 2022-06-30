@@ -6,6 +6,8 @@ import torch
 from transformers import AutoTokenizer, pipeline, AutoModelForMaskedLM
 from transformers.modeling_outputs import MaskedLMOutput
 from optimum.onnxruntime.modeling_ort import ORTModel, ORTModelForFeatureExtraction
+from tqdm import tqdm
+import numpy as np
 
 from latency import utils
 from latency.pilot.qwant import benchmark_fralbert
@@ -89,13 +91,18 @@ def main():
     )
     unmasker = pipeline("fill-mask", model=onnx_model, tokenizer=tokenizer)
 
-    compute_latency = 0
-    for _ in range(utils.random_folds):
+    compute_latency = []
+    for i in tqdm(range(utils.random_folds * 10)):
+        prompt = utils.prompts.get("8")[i % utils.random_folds].split()
+        prompt[4] = "[MASK]"
+        prompt = " ".join(prompt)
         start = time.time()
-        output = unmasker(benchmark_fralbert.text)
-        compute_latency += time.time() - start
+        _ = unmasker(prompt)
+        compute_latency.append(time.time() - start)
 
-    print(f"Compute latency: {compute_latency / utils.random_folds * 1000:.2f}ms")
+    print(
+        f"Compute latency: {np.mean(compute_latency) * 1000:.2f}ms - std {np.std(compute_latency) * 1000:.2f}ms"
+    )
 
 
 if __name__ == "__main__":

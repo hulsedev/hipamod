@@ -1,29 +1,23 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
 import os
-from pathlib import Path
 import sys
-import torch.nn.functional as F
-from optimum.onnxruntime.modeling_ort import ORTModelForCausalLM
-from transformers import pipeline, AutoModelForCausalLM
-from onnxruntime import InferenceSession
+from pathlib import Path
 
-from latency.pilot.opt.compress import export_onnx
+import torch
+import torch.nn.functional as F
+from onnxruntime import InferenceSession
+from torch.nn import CrossEntropyLoss
+from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 
 
 def log_probs_with_ppl(model_ckpt, prompt, model_dir=None, model_filename=None):
     if model_dir:
-        # base_model = AutoModelForCausalLM.from_pretrained(model_ckpt)
-        # onnx_config = export_onnx.OPTOnnxConfig(base_model.config, task="causal-lm")
-
         session = InferenceSession(str(model_dir.joinpath(model_filename)))
         tokenizer = AutoTokenizer.from_pretrained(model_ckpt, use_fast=False)
+        config = AutoConfig.from_pretrained(model_ckpt)
 
         input_ids = tokenizer(prompt, return_tensors="np")
         outputs = session.run(None, dict(input_ids))
-
         logits = torch.from_numpy(outputs[0])
-        print(logits.shape)
 
         arg_probs, _ = F.softmax(logits, dim=-1).max(-1)
         print("argmax probility:", arg_probs[0].cpu().detach().numpy())
@@ -34,12 +28,19 @@ def log_probs_with_ppl(model_ckpt, prompt, model_dir=None, model_filename=None):
             skip_special_tokens=False,
         )
 
-        # TODO: add the loss to the outputs of the ONNX model
-        # print("argmax tokens:", sent)
-        # xentropy_loss = outputs[0]
-        # print("cross entropy loss:", xentropy_loss.item())
-        # ppl = torch.exp(xentropy_loss).item()
-        # print("ppl:", ppl)
+        # extra step to compute the loss, since not included with onnx model
+        labels = torch.from_numpy(input_ids.input_ids)
+        shift_logits = logits[..., :-1, :].contiguous()
+        shift_labels = labels[..., 1:].contiguous()
+        # Flatten the tokens
+        loss_fct = CrossEntropyLoss()
+        loss = loss_fct(shift_logits.view(-1, config.vocab_size), shift_labels.view(-1))
+
+        print("argmax tokens:", sent)
+        xentropy_loss = loss
+        print("cross entropy loss:", xentropy_loss.item())
+        ppl = torch.exp(xentropy_loss).item()
+        print("ppl:", ppl)
     else:
         model = AutoModelForCausalLM.from_pretrained(model_ckpt)
         model.eval()
@@ -63,7 +64,6 @@ def log_probs_with_ppl(model_ckpt, prompt, model_dir=None, model_filename=None):
         print("cross entropy loss:", xentropy_loss.item())
         ppl = torch.exp(xentropy_loss).item()
         print("ppl:", ppl)
-        assert False
 
 
 if __name__ == "__main__":

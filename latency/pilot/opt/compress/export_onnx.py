@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Mapping, List, Optional, Any
 from collections import OrderedDict
+from copy import copy
 
 import onnx
 from transformers.onnx import (
@@ -17,6 +18,8 @@ from transformers import (
     AutoModelForCausalLM,
 )
 from transformers.configuration_utils import PretrainedConfig
+
+# from latency.pilot.opt.compress.utils import OPTOnnxConfig
 
 
 class OPTOnnxConfig(OnnxConfigWithPast):
@@ -47,6 +50,13 @@ class OPTOnnxConfig(OnnxConfigWithPast):
             common_inputs["attention_mask"] = {0: "batch", 1: "sequence"}
 
         return common_inputs
+
+    # @property
+    # def outputs(self) -> Mapping[str, Mapping[int, str]]:
+    #    # we know that task is "causal-lm"
+    #    outputs = OrderedDict({"loss": {0: "batch", 1: "sequence"}})
+    #    outputs["logits"] = {0: "batch", 1: "sequence"}
+    #    return outputs
 
     @property
     def num_layers(self) -> int:
@@ -123,8 +133,10 @@ def main():
         model_dir.mkdir(parents=True)
 
     model_ckpt = "facebook/opt-350m"
+    # override definition of base model too
     base_model = AutoModelForCausalLM.from_pretrained(model_ckpt)
     onnx_config = OPTOnnxConfig(base_model.config, task="causal-lm")
+
     onnx_path = model_dir.joinpath("model.onnx")
     tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
     onnx_inputs, onnx_outputs = export(

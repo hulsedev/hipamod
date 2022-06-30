@@ -2,6 +2,8 @@ from pathlib import Path
 import time
 
 from transformers import pipeline, AutoTokenizer
+import numpy as np
+from tqdm import tqdm
 
 from latency.pilot.qwant.onnx_fralbert import ORTModelForMaskedLM
 from latency.pilot.qwant import benchmark_fralbert
@@ -17,13 +19,18 @@ def main():
     model = ORTModelForMaskedLM.from_pretrained(save_path, file_name=filename)
     onnx_clx = pipeline("fill-mask", model=model, tokenizer=tokenizer)
 
-    compute_latency = 0
-    for _ in range(utils.random_folds):
+    compute_latency = []
+    for i in tqdm(range(utils.random_folds * 10)):
+        prompt = utils.prompts.get("8")[i % utils.random_folds].split()
+        prompt[4] = "[MASK]"
+        prompt = " ".join(prompt)
         start = time.time()
-        output = onnx_clx(benchmark_fralbert.text)
-        compute_latency += time.time() - start
+        _ = onnx_clx(prompt)
+        compute_latency.append(time.time() - start)
 
-    print(f"Compute latency: {compute_latency / utils.random_folds * 1000:.2f}ms")
+    print(
+        f"Compute latency: {np.mean(compute_latency) * 1000:.2f}ms - std {np.std(compute_latency) * 1000:.2f}ms"
+    )
 
 
 if __name__ == "__main__":

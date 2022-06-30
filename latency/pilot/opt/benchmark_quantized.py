@@ -8,6 +8,7 @@ from transformers import AutoTokenizer
 from optimum.onnxruntime.modeling_ort import ORTModelForCausalLM
 
 from latency import utils
+from latency.pilot.opt.compress.utils import OPTORTModelForCausalLM
 
 
 def main():
@@ -16,7 +17,7 @@ def main():
         model_dir.mkdir(parents=True)
 
     model_ckpt = "facebook/opt-350m"
-    onnx_model = ORTModelForCausalLM.from_pretrained(
+    onnx_model = OPTORTModelForCausalLM.from_pretrained(
         model_dir, file_name="model_quantized.onnx"
     )
     tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
