@@ -11,12 +11,12 @@ from latency import utils
 from latency.pilot.opt.compress.utils import OPTORTModelForCausalLM
 
 
-def main():
-    model_dir = Path("latency/pilot/opt/model/")
+def main(model_name):
+    model_dir = Path(f"latency/pilot/opt/model/{model_name}/")
     if not model_dir.is_dir():
         model_dir.mkdir(parents=True)
 
-    model_ckpt = "facebook/opt-350m"
+    model_ckpt = f"facebook/{model_name}"
     onnx_model = OPTORTModelForCausalLM.from_pretrained(
         model_dir, file_name="model_quantized.onnx"
     )
@@ -35,4 +35,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main("opt-125m")

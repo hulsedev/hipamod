@@ -53,13 +53,13 @@ class OPTORTQuantizer(ORTQuantizer):
         return OPTORTQuantizer(preprocessor, model, feature, opset)
 
 
-def main():
-    model_dir = Path("latency/pilot/opt/model/")
+def main(model_name):
+    model_dir = Path(f"latency/pilot/opt/model/{model_name}/")
     if not model_dir.is_dir():
         model_dir.mkdir(parents=True)
 
-    model_ckpt = "facebook/opt-350m"
-    onnx_path = Path("latency/pilot/opt/model/model.onnx")
+    model_ckpt = f"facebook/{model_name}"
+    onnx_path = Path(f"latency/pilot/opt/model/{model_name}/model.onnx")
     output_file = Path("model_quantized.onnx")
 
     quantizer = OPTORTQuantizer.from_pretrained(model_ckpt, feature="causal-lm")
@@ -74,4 +74,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main("opt-350m")

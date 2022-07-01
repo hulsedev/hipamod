@@ -2,6 +2,8 @@ from pathlib import Path
 from typing import Mapping, List, Optional, Any
 from collections import OrderedDict
 from copy import copy
+from typing import Union, IO
+import os
 
 import onnx
 from transformers.onnx import (
@@ -126,13 +128,32 @@ class OPTOnnxConfig(OnnxConfigWithPast):
         return 13
 
 
-def main():
+def load_model(
+    model_dir: Union[str, Path],
+    f: Union[IO[bytes], str],
+    format: Optional[Any] = None,
+    load_external_data: bool = True,
+):
+    s = onnx._load_bytes(f)
+    model = onnx.load_model_from_string(s, format=format)
+
+    if load_external_data:
+        model_filepath = onnx._get_file_path(f)
+        if model_filepath:
+            base_dir = model_dir  # os.path.dirname(model_filepath)
+            onnx.load_external_data_for_model(model, base_dir)
+
+    return model
+
+
+def main(model_name):
     # shooting for 5ms compute latency
-    model_dir = Path("latency/pilot/opt/model/")
+    print(f"Exporting {model_name} to ONNX")
+    model_dir = Path(f"latency/pilot/opt/model/{model_name}/")
     if not model_dir.is_dir():
         model_dir.mkdir(parents=True)
 
-    model_ckpt = "facebook/opt-350m"
+    model_ckpt = f"facebook/{model_name}"
     # override definition of base model too
     base_model = AutoModelForCausalLM.from_pretrained(model_ckpt)
     onnx_config = OPTOnnxConfig(base_model.config, task="causal-lm")
@@ -143,7 +164,7 @@ def main():
         tokenizer, base_model, onnx_config, onnx_config.default_onnx_opset, onnx_path
     )
 
-    onnx_model = onnx.load(onnx_path)
+    onnx_model = load_model(model_dir, onnx_path)
     onnx.checker.check_model(onnx_model)
     validate_model_outputs(
         onnx_config,
@@ -154,9 +175,18 @@ def main():
         1e-4,  # onnx_config.atol_for_validation,
     )
     print(
-        "Successfully exported model to ONNX format. Available at {}".format(onnx_path)
+        f"Successfully exported {model_ckpt} to ONNX format. Available at {onnx_path}"
     )
 
 
 if __name__ == "__main__":
-    main()
+    for model_name in [
+        # "opt-125m",
+        "opt-350m",
+        # "opt-1.3b",
+        # "opt-2.7b",
+        # "opt-6.7b",
+        # "opt-13b",
+        # "opt-30b",
+    ]:
+        main(model_name)

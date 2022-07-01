@@ -160,6 +160,7 @@ target/
 
 sparse/
 model/
+tmp/
 data/
 lm_cache/
 

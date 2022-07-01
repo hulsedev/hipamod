@@ -252,9 +252,8 @@ def main(model_ckpt):
     raw_datasets = load_dataset(dataset_name)
 
     accelerator = Accelerator()
-
     config = AutoConfig.from_pretrained(model_ckpt)
-    tokenizer = AutoTokenizer.from_pretrained(model_ckpt, use_fast=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_ckpt, use_fast=False)
     print(tokenizer)
     model = AutoModelForCausalLM.from_pretrained(model_ckpt, config=config)
 

@@ -7,8 +7,8 @@ import numpy as np
 from latency import utils
 
 
-def main():
-    model_ckpt = "facebook/opt-350m"
+def main(model_name):
+    model_ckpt = f"facebook/{model_name}"
     # TODO: why is it super slow with longer input lengths?
     classifier = pipeline(
         "text-generation",
@@ -29,4 +29,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main("opt-350m")

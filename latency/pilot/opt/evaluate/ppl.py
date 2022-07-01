@@ -68,25 +68,32 @@ def log_probs_with_ppl(model_ckpt, prompt, model_dir=None, model_filename=None):
 
 if __name__ == "__main__":
     prompts = "There is a book on the desk."
-
-    if len(sys.argv) > 1 and sys.argv[1] == "onnx":
-        model_dir = Path("latency/pilot/opt/model/")
-        model_id = "model.onnx"
-        model_ckpt = "facebook/opt-350m"
-        print(20 * "=" + str(model_id) + 20 * "=")
-        log_probs_with_ppl(
-            model_ckpt, prompts, model_dir=model_dir, model_filename=model_id
-        )
-    else:
-        for model_id in [
-            # "opt-125m",
-            "opt-350m",
-            "opt-1.3b",
-            "opt-2.7b",
-            # "opt-6.7b",
-            # "opt-13b",
-            # "opt-30b",
-        ]:
+    for model_name in [
+        "opt-125m",
+        # "opt-350m",
+        # "opt-1.3b",
+        # "opt-2.7b",
+        # "opt-6.7b",
+        # "opt-13b",
+        # "opt-30b",
+    ]:
+        if len(sys.argv) > 1 and sys.argv[1] == "onnx":
+            model_dir = Path(f"latency/pilot/opt/model/{model_name}/")
+            model_id = "model.onnx"
+            model_ckpt = f"facebook/{model_name}"
+            print(20 * "=" + str(model_name) + 20 * "=")
+            log_probs_with_ppl(
+                model_ckpt, prompts, model_dir=model_dir, model_filename=model_id
+            )
+        elif len(sys.argv) > 1 and sys.argv[1] == "quantized":
+            model_dir = Path(f"latency/pilot/opt/model/{model_name}/")
+            model_id = "model_quantized.onnx"
+            model_ckpt = f"facebook/{model_name}"
+            print(20 * "=" + str(model_name) + " quantized" + 20 * "=")
+            log_probs_with_ppl(
+                model_ckpt, prompts, model_dir=model_dir, model_filename=model_id
+            )
+        else:
             print(20 * "=" + model_id + 20 * "=")
             model_path = os.path.join("facebook", model_id)
             log_probs_with_ppl(model_path, prompts)

@@ -10,12 +10,12 @@ from optimum.onnxruntime.modeling_ort import ORTModelForCausalLM
 from latency import utils
 
 
-def main():
-    model_dir = Path("latency/pilot/opt/model/")
+def main(model_name):
+    model_dir = Path(f"latency/pilot/opt/model/{model_name}/")
     if not model_dir.is_dir():
         model_dir.mkdir(parents=True)
 
-    model_ckpt = "facebook/opt-350m"
+    model_ckpt = f"facebook/{model_name}"
     onnx_model = ORTModelForCausalLM.from_pretrained(model_dir, file_name="model.onnx")
     tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
     classifier = pipeline("text-generation", model=onnx_model, tokenizer=tokenizer)
@@ -32,4 +32,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main("opt-350m")
