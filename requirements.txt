@@ -16,3 +16,4 @@ nni
 boto3
 sagemaker
 sparsify
+dataclasses
