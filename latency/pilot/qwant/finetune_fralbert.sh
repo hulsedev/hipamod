@@ -1,4 +1,4 @@
-python latency/pilot/qwant/finetune_fquad.py \
+python3 latency/pilot/qwant/finetune_fquad.py \
 --model_name_or_path qwant/fralbert-base \
 --do_train \
 --do_eval \
