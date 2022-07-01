@@ -115,6 +115,9 @@ class DataTrainingArguments:
         default=None,
         metadata={"help": "The name of the dataset to use (via the datasets library)."},
     )
+    dataset_loading_script: Optional[str] = field(
+        default=None, metadata={"help": "Path to a script to load the dataset."}
+    )
     dataset_config_name: Optional[str] = field(
         default=None,
         metadata={
@@ -231,6 +234,7 @@ class DataTrainingArguments:
             and self.train_file is None
             and self.validation_file is None
             and self.test_file is None
+            and self.dataset_loading_script is None
         ):
             raise ValueError(
                 "Need either a dataset name or a training/validation file/test_file."
@@ -339,6 +343,11 @@ def main():
             cache_dir=model_args.cache_dir,
             use_auth_token=True if model_args.use_auth_token else None,
         )
+    elif data_args.dataset_loading_script is not None:
+        raw_datasets = load_dataset(
+            data_args.dataset_loading_script,
+            cache_dir=model_args.cache_dir,
+        )
     else:
         data_files = {}
         if data_args.train_file is not None:
@@ -358,6 +367,7 @@ def main():
             cache_dir=model_args.cache_dir,
             use_auth_token=True if model_args.use_auth_token else None,
         )
+
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.
 
@@ -409,9 +419,8 @@ def main():
     else:
         column_names = raw_datasets["test"].column_names
 
-    print(column_names)
-    question_column_name = "question" if "question" in column_names else column_names[0]
-    context_column_name = "context" if "context" in column_names else column_names[1]
+    question_column_name = "question" if "question" in column_names else column_names[1]
+    context_column_name = "context" if "context" in column_names else column_names[0]
     answer_column_name = "answers" if "answers" in column_names else column_names[2]
 
     # Padding side determines if we do (question|context) or (context|question).

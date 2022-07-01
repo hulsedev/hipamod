@@ -23,6 +23,7 @@ import os
 from typing import Optional, Tuple
 
 import numpy as np
+import datasets
 from tqdm.auto import tqdm
 from transformers import Trainer, is_torch_tpu_available
 from transformers.trainer_utils import PredictionOutput
