@@ -11,5 +11,5 @@
 module load python/3.7
 module load cuda/10.2/cudnn/7.6
 module load cudatoolkit/10.2
-source $HOME/live/bin/activate
+source $HOME/hipamod/env/bin/activate
 FORCE_CUDA=1 python3 latency/pilot/qwant/finetune_fralbert.sh
