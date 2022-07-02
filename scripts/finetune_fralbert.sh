@@ -21,7 +21,7 @@ FORCE_CUDA=1 python3 latency/pilot/qwant/finetune_fquad.py \
 --do_train \
 --do_eval \
 --per_device_train_batch_size 4 \
---learning_rate 3.125e-4 \
+--learning_rate 5e-5 \
 --num_train_epochs 10 \
 --max_seq_length 384 \
 --doc_stride 128 \
