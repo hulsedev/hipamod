@@ -4,8 +4,8 @@
 #SBATCH --error=trace/error.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=12         # Ask for 6 CPUs
-#SBATCH --gres=gpu:32gb:2              # Ask for 1 GPU
-#SBATCH --mem=64G                 # Ask for 10 GB of RAM
+#SBATCH --gres=gpu:32gb:1              # Ask for 1 GPU
+#SBATCH --mem=48G                 # Ask for 10 GB of RAM
 #SBATCH --time=3:00:00            # The job will run for 10 minutes
 
 module load python/3.7
