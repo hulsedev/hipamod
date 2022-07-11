@@ -1,0 +1,1 @@
+gcloud compute ssh --zone "us-central1-a" "k8s-master-test"  --project "winged-sol-355710"
